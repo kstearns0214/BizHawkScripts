@@ -20,7 +20,8 @@ KLib.Menu =
 
     Keys =
     {
-        Toggle = { "+@X1 Back", "@X1 LeftShoulder" },
+        --Toggle = { "+@X1 Back", "@X1 LeftShoulder" },
+		Toggle = { "@P" },
         Back = "@X1 B",
         Up = "@X1 DpadUp",
         Down = "@X1 DpadDown",
