@@ -52,7 +52,7 @@ end
 
 function KLib.Message.Update()
     local function ModAlpha(color, time)
-        return bit.band(color, 0x00FFFFFF) + bit.lshift((bit.rshift(color, 24) / KLib.Message.FadeTime) * (KLib.Message.FadeTime - math.abs(time)), 24)
+        return color & 0x00FFFFFF + color
     end
     
     local y = client.bufferheight() - KLib.Message.FontSize - 2

@@ -841,8 +841,8 @@ function Mods()
         local transition = 0xFF / maxPE
         local byte = KLib.Math.Clamp(math.floor(PE * transition), 1, 255)
         
-        color = color + bit.lshift(byte, 8)
-        color = color - bit.lshift(byte, 16)
+        color = color + byte << 8
+        color = color - byte << 16
         
         gui.drawText(client.bufferwidth() - 12, client.bufferheight() - 14, PE .. "/" .. maxPE, color, KLib.Color.Transparent, nil, nil, nil, "right")
         

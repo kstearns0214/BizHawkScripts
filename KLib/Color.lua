@@ -15,23 +15,26 @@ KLib.Color =
 }
 
 function KLib.Color.GetRed(color)
-    return bit.rshift(bit.band(color, 0x00FF0000), 16)
+    return color & 0x00FF0000 >> 16
 end
 
 function KLib.Color.GetGreen(color)
-    return bit.rshift(bit.band(color, 0x0000FF00), 8)
+    return color & 0x0000FF00 >> 8
 end
 
 function KLib.Color.GetBlue(color)
-    return bit.band(color, 0x000000FF)
+    return color & 0x000000FF
 end
 
 function KLib.Color.GetAlpha(color)
-    return bit.rshift(bit.band(color, 0xFF000000), 24)
+    return color & 0xFF000000 >> 24
 end
 
 function KLib.Color.Make(r, g, b, a)
-    return bit.lshift(a or 255, 24) + bit.lshift(r, 16) + bit.lshift(g, 8) + b
+	if a == nil then
+		a = 255
+	end
+    return a << 24 + r << 16 + g << 8 + b
 end
 
 function KLib.Color.Get(color)
@@ -106,27 +109,31 @@ function KLib.Color.Pulse(color, mult, time, offset)
     time = time or 256
     offset = offset or 0
     
-    local mod = math.sin(emu.framecount() / time + offset) * mult
-    local a = bit.rshift(bit.band(color, 0xFF000000), 24)
-    local r = bit.rshift(bit.band(color, 0x00FF0000), 16) + mod
-    local g = bit.rshift(bit.band(color, 0x0000FF00), 8) + mod
-    local b = bit.band(color, 0x000000FF) + mod
+    local mod = math.floor(math.sin(emu.framecount() / time + offset) * mult)
+    local a = color & 0xFF000000 >> 24
+    local r = color & 0x00FF0000 >> 16 + mod
+    local g = color & 0x0000FF00 >> 8 + mod
+    local b = color & 0x000000FF + mod
     
     if r < 0 then r = 0 elseif r > 255 then r = 255 end
     if g < 0 then g = 0 elseif g > 255 then g = 255 end
     if b < 0 then b = 0 elseif b > 255 then b = 255 end
     
-    return bit.lshift(a, 24) + bit.lshift(r, 16) + bit.lshift(g, 8) + b
+    --return a << 24 + r << 16 + g << 8 + b
+	return KLib.Color.Yellow
 end
 
 function KLib.Color.Rainbow(speed, alpha, offset)
     speed = speed or 64
-    alpha = alpha or 255
+	if alpha == nil then
+		alpha = 255
+	end
     offset = offset or 0
     
-    local r = math.sin(emu.framecount() / speed + offset) * 127 + 128
-    local g = math.sin((emu.framecount() / speed + offset) + 2) * 127 + 128
-    local b = math.sin((emu.framecount() / speed + offset) + 4) * 127 + 128
+    local r = math.floor(math.sin(emu.framecount() / speed + offset) * 127 + 128)
+    local g = math.floor(math.sin((emu.framecount() / speed + offset) + 2) * 127 + 128)
+    local b = math.floor(math.sin((emu.framecount() / speed + offset) + 4) * 127 + 128)
     
-    return bit.lshift(alpha, 24) + bit.lshift(r, 16) + bit.lshift(g, 8) + b
+    --return alpha << 24 + r << 16 + g << 8 + b
+	return KLib.Color.Green
 end
